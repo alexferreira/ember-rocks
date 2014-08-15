@@ -11,6 +11,8 @@
   "newcap": true,
   "noarg": true,
   "quotmark": "single",
+  "laxbreak": true,
+  "laxcomma": true,
   "undef": true,
   "unused": "vars",
   "strict": false,
