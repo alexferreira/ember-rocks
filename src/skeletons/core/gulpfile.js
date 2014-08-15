@@ -109,7 +109,6 @@ gulp.task('sass', function() {
       // compass: false,  // default value
       // debugInfo: false,  // default value
       // lineNumbers: false,  // default value
-      sourcemap: true,
       style: 'expanded',
       precision: 10,
       loadPath: ['/assets/styles/sass']
@@ -204,15 +203,16 @@ gulp.task('envDev', function(){
 gulp.task('releaseClient',
   [ 'clean', 'sass', 'lint', 'build', 'stripLRScript', 'envProd'],
   function(){
-    var src = 'client/index.html',
-      dest = 'build/client';
+    var src = 'client/index.html'
+      , dest = 'build/client'
+      , assets = $.useref.assets({searchPath: 'client'});
 
     // clean task has to be done
     // imagemin will minify all images and copy into build
     gulp.start('imagemin');
 
     return gulp.src(src)
-      .pipe($.useref.assets({searchPath: 'client'}))
+      .pipe(assets)
       // Concatenate And Minify JavaScript
       .pipe($.if('*.js', $.uglify({preserveComments: 'some'})))
       // Remove Any Unused CSS, Used as needed
@@ -222,7 +222,7 @@ gulp.task('releaseClient',
       // })))
       // Concatenate And Minify Styles
       .pipe($.if('*.css', $.csso()))
-      .pipe($.useref.restore())
+      .pipe(assets.restore())
       .pipe($.useref())
       .pipe($.if('*.html', $.minifyHtml()))
       .pipe(gulp.dest(dest))
